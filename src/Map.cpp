@@ -23,16 +23,16 @@ Map::Map(const std::string& path) {
     }
 
     std::vector<std::string> lines;
-    std::string line;
+    std::string inputLine;
 
-    while (std::getline(file, line)) {
+    while (std::getline(file, inputLine)) {
         // Убираем \r для Windows-файлов
-        if (!line.empty() && line.back() == '\r') {
-            line.pop_back();
+        if (!inputLine.empty() && inputLine.back() == '\r') {
+            inputLine.pop_back();
         }
 
-        if (!line.empty()) {
-            lines.push_back(line);
+        if (!inputLine.empty()) {
+            lines.push_back(inputLine);
         }
     }
 

@@ -67,6 +67,6 @@ void Renderer::renderActors(const std::vector<Actor>& actors) {
     }
 }
 
-void Renderer::renderItems(const std::vector<Item>& items) {
+void Renderer::renderItems(const std::vector<Item>&) {
 
 }
