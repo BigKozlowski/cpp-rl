@@ -1,0 +1,136 @@
+cmake_minimum_required(VERSION 3.28)
+
+project(raylib_roguelike CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+function(target_link_libraries_system target)
+  set(options PRIVATE PUBLIC INTERFACE)
+  cmake_parse_arguments(TLLS "${options}" "" "" ${ARGN})
+
+  foreach(op ${options})
+    if(TLLS_${op})
+      set(scope ${op})
+    endif()
+  endforeach()
+
+  set(libs ${TLLS_UNPARSED_ARGUMENTS})
+
+  foreach(lib ${libs})
+    get_target_property(lib_include_dirs
+      ${lib}
+      INTERFACE_INCLUDE_DIRECTORIES
+    )
+
+    if(lib_include_dirs)
+      if(scope)
+        target_include_directories(
+          ${target}
+          SYSTEM
+          ${scope}
+          ${lib_include_dirs}
+        )
+      else()
+        target_include_directories(
+          ${target}
+          SYSTEM
+          PRIVATE
+          ${lib_include_dirs}
+        )
+      endif()
+    else()
+      message(
+        "Warning: ${lib} doesn't set INTERFACE_INCLUDE_DIRECTORIES. "
+        "No include_directories set."
+      )
+    endif()
+
+    if(scope)
+      target_link_libraries(${target} ${scope} ${lib})
+    else()
+      target_link_libraries(${target} ${lib})
+    endif()
+  endforeach()
+endfunction()
+
+# Adding Raylib
+include(FetchContent)
+
+set(FETCHCONTENT_QUIET FALSE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+  raylib
+  GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
+  GIT_TAG "master"
+  GIT_PROGRESS TRUE
+)
+
+FetchContent_MakeAvailable(raylib)
+
+# Adding our source files
+file(
+  GLOB_RECURSE PROJECT_SOURCES
+  CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp"
+)
+
+set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
+
+# Declaring our executable
+add_executable(${PROJECT_NAME})
+
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE
+    ${PROJECT_SOURCES}
+)
+
+target_include_directories(
+  ${PROJECT_NAME}
+  PRIVATE
+    ${PROJECT_INCLUDE}
+)
+
+target_link_libraries_system(
+  ${PROJECT_NAME}
+  PRIVATE
+    raylib
+)
+
+# Compiler warnings
+if(MSVC)
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE
+      /W4
+      /WX
+  )
+else()
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      # -Werror
+  )
+endif()
+
+# Debug symbols
+if(NOT MSVC)
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE
+      $<$<CONFIG:Debug>:-g>
+  )
+endif()
+
+# Assets
+target_compile_definitions(
+  ${PROJECT_NAME}
+  PUBLIC
+    ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+)
