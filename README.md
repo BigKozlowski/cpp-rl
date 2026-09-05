@@ -9,11 +9,12 @@
 7. Input
 8. Game loop
 9. Movement
-10. Monsters
-11. Turn system
-12. Combat
-13. Items
-14. Inventory
-15. Procedural map generation
-16. AI
-17. Save/load
+10. Camera
+11. Monsters
+12. Turn system
+13. Combat
+14. Items
+15. Inventory
+16. Procedural map generation
+17. AI
+18. Save/load
