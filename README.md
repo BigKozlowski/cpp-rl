@@ -1,20 +1,20 @@
 # Implementation plan:
 
-1. Position
-2. Tile
-3. Map
-4. Actor
-5. Player
-6. Renderer
-7. Input
-8. Game loop
-9. Movement
-10. Camera
-11. Monsters
-12. Turn system
-13. Combat
-14. Items
-15. Inventory
-16. Procedural map generation
-17. AI
-18. Save/load
+1. Position                   - V
+2. Tile                       - V
+3. Map                        - V
+4. Actor                      - V
+5. Player                     - V
+6. Renderer                   - V
+7. Input                      - V
+8. Game loop                  - V
+9. Movement                   - V
+10. Camera                    - X
+11. Monsters                  - X
+12. Turn system               - X
+13. Combat                    - X
+14. Items                     - X
+15. Inventory                 - X
+16. Procedural map generation - X
+17. AI                        - X
+18. Save/load                 - X
